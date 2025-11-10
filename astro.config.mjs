@@ -3,8 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://astronaut.github.io',
-    base: 'mi-repo',
+    site: 'https://cristotreupil.github.io',
     devToolbar: {
         enabled: false
     },
