@@ -1,0 +1,317 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({
+		params: { slug: project.slug },
+		props: { project },
+	}));
+}
+
+type Props = {
+	project: CollectionEntry<'projects'>;
+};
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<Layout>
+	<main class="project-detail">
+		<div class="container">
+			<!-- Back Button -->
+			<div class="back-navigation">
+				<a href="/" class="back-btn" id="backBtn">← Volver a la galería</a>
+			</div>
+
+			<!-- Project Header -->
+			<header class="project-header">
+				<div class="project-meta">
+					<span class="project-category">{project.data.categories.join(' • ')}</span>
+					<h1 class="project-title">{project.data.title}</h1>
+					<p class="project-description">{project.data.description}</p>
+					<div class="project-info">
+						{project.data.client && (
+							<div class="info-item">
+								<strong>Cliente:</strong> {project.data.client}
+							</div>
+						)}
+						{project.data.year && (
+							<div class="info-item">
+								<strong>Año:</strong> {project.data.year}
+							</div>
+						)}
+						{project.data.tags && (
+							<div class="info-item">
+								<strong>Tags:</strong> {project.data.tags.join(', ')}
+							</div>
+						)}
+					</div>
+				</div>
+				<div class="project-image">
+					<img 
+                    transition:name= {`img-${project.slug}`}
+                    src={project.data.image} 
+                    alt={project.data.title} 
+                    draggable="false"
+                    />
+				</div>
+			</header>
+
+			<!-- Project Content -->
+			<article class="project-content">
+				<Content />
+			</article>
+
+			<!-- Navigation to Other Projects -->
+			<section class="related-projects">
+				<h3>Otros proyectos</h3>
+				<div class="related-grid">
+					<!-- This would be populated with other projects -->
+					<a href="/" class="view-all-btn" id="viewAllBtn">Ver todos los proyectos →</a>
+				</div>
+			</section>
+		</div>
+	</main>
+</Layout>
+
+<script>
+	// Handle back navigation with state preservation
+	document.addEventListener('DOMContentLoaded', function() {
+		const backBtn = document.getElementById('backBtn');
+		const viewAllBtn = document.getElementById('viewAllBtn');
+		
+		// Save project info immediately when page loads (for any type of navigation back)
+		function saveCurrentProjectState() {
+			const projectSlug = window.location.pathname.split('/').pop();
+			const projectInfo = {
+				slug: projectSlug,
+				timestamp: Date.now()
+			};
+			sessionStorage.setItem('lastProject', JSON.stringify(projectInfo));
+			console.log('Saved current project state:', projectInfo);
+		}
+		
+		// Save state immediately when page loads
+		saveCurrentProjectState();
+		
+		function handleBackNavigation(e: Event) {
+			e.preventDefault();
+			
+			// Ensure state is saved (already done on page load, but just in case)
+			saveCurrentProjectState();
+			
+			console.log('Navigating back via button');
+			console.log('Active filter stored:', sessionStorage.getItem('activeFilter'));
+			console.log('Scroll position stored:', sessionStorage.getItem('scrollPosition'));
+			
+			// Navigate back to home
+			window.location.href = '/';
+		}
+		
+		if (backBtn) {
+			backBtn.addEventListener('click', handleBackNavigation);
+		}
+		
+		if (viewAllBtn) {
+			viewAllBtn.addEventListener('click', handleBackNavigation);
+		}
+		
+		// Handle browser back button navigation
+		window.addEventListener('beforeunload', function() {
+			// Save state when user navigates away (including back button)
+			saveCurrentProjectState();
+		});
+		
+		// Handle popstate (browser back/forward buttons)
+		window.addEventListener('popstate', function(event) {
+			// Save state when using browser navigation
+			saveCurrentProjectState();
+		});
+	});
+</script>
+
+<style>
+	.project-detail {
+		min-height: 100vh;
+		padding: 40px 0;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	.back-navigation {
+		margin-bottom: 40px;
+	}
+
+	.back-btn {
+		color: #e74c3c;
+		text-decoration: none;
+		font-weight: 600;
+		padding: 10px 20px;
+		border: 2px solid #e74c3c;
+		border-radius: 25px;
+		transition: all 0.3s ease;
+		display: inline-block;
+	}
+
+	.back-btn:hover {
+		background: #e74c3c;
+		color: white;
+		transform: translateY(-2px);
+	}
+
+	.project-header {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 60px;
+		margin-bottom: 60px;
+		align-items: start;
+	}
+
+	.project-category {
+		color: #e74c3c;
+		font-size: 0.9rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		margin-bottom: 15px;
+		display: block;
+	}
+
+	.project-title {
+		font-size: 3rem;
+		color: #2c3e50;
+		margin-bottom: 20px;
+		font-weight: bold;
+		line-height: 1.2;
+	}
+
+	.project-description {
+		font-size: 1.2rem;
+		color: #7f8c8d;
+		line-height: 1.6;
+		margin-bottom: 30px;
+	}
+
+	.project-info {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.info-item {
+		color: #2c3e50;
+		font-size: 1rem;
+	}
+
+	.info-item strong {
+		color: #e74c3c;
+	}
+
+	.project-image {
+		position: sticky;
+		top: 100px;
+	}
+
+	.project-image img {
+		width: 100%;
+		height: auto;
+		border-radius: 15px;
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+	}
+
+	.project-content {
+		max-width: 800px;
+		margin: 0 auto 80px;
+		font-size: 1.1rem;
+		line-height: 1.8;
+		color: #2c3e50;
+	}
+
+	.project-content h2 {
+		color: #e74c3c;
+		margin-top: 40px;
+		margin-bottom: 20px;
+		font-size: 1.8rem;
+	}
+
+	.project-content h3 {
+		color: #2c3e50;
+		margin-top: 30px;
+		margin-bottom: 15px;
+		font-size: 1.4rem;
+	}
+
+	.project-content ul {
+		padding-left: 20px;
+	}
+
+	.project-content li {
+		margin-bottom: 8px;
+	}
+
+	.related-projects {
+		text-align: center;
+		padding-top: 60px;
+		border-top: 1px solid #ecf0f1;
+	}
+
+	.related-projects h3 {
+		font-size: 2rem;
+		color: #2c3e50;
+		margin-bottom: 30px;
+	}
+
+	.view-all-btn {
+		color: white;
+		background: #e74c3c;
+		text-decoration: none;
+		font-weight: 600;
+		padding: 15px 30px;
+		border-radius: 25px;
+		transition: all 0.3s ease;
+		display: inline-block;
+	}
+
+	.view-all-btn:hover {
+		background: #c0392b;
+		transform: translateY(-2px);
+		box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.project-header {
+			grid-template-columns: 1fr;
+			gap: 40px;
+		}
+
+		.project-title {
+			font-size: 2.2rem;
+		}
+
+		.project-image {
+			position: static;
+		}
+
+		.project-content {
+			font-size: 1rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.project-title {
+			font-size: 1.8rem;
+		}
+
+		.container {
+			padding: 0 15px;
+		}
+	}
+</style>

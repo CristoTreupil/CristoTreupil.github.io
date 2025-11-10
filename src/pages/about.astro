@@ -1,0 +1,794 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+	<main class="about-page">
+		<div class="container">
+			<!-- Download PDF Button -->
+			<div class="download-section">
+				<button class="download-btn" id="downloadPdf">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					Descargar CV (PDF)
+				</button>
+			</div>
+
+			<!-- CV Container -->
+			<div class="cv-container" id="cvContent">
+				<!-- Header Section -->
+				<section class="cv-header">
+					<div class="profile-section">
+						<div class="profile-image">
+							<div class="avatar-placeholder">
+								<svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<circle cx="12" cy="7" r="4" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+						</div>
+						<div class="profile-info">
+							<h1 class="name">Sofia Ilustradora</h1>
+							<p class="title">Ilustradora Digital & Diseñadora Gráfica</p>
+							<p class="bio">
+								Diseñadora gráfica e ilustradora apasionada por contar historias visuales. 
+								Me especializo en ilustración digital y diseño de personajes, con un estilo único 
+								que combina técnicas tradicionales y digitales.
+							</p>
+						</div>
+					</div>
+
+					<!-- Contact Info -->
+					<div class="contact-info-grid">
+						<div class="contact-item">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#e74c3c" stroke-width="2"/>
+								<polyline points="22,6 12,13 2,6" stroke="#e74c3c" stroke-width="2"/>
+							</svg>
+							<span>so.dibujitos@gmail.com</span>
+						</div>
+						<div class="contact-item">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#e74c3c" stroke-width="2"/>
+								<circle cx="12" cy="10" r="3" stroke="#e74c3c" stroke-width="2"/>
+							</svg>
+							<span>Santiago, Chile</span>
+						</div>
+						<div class="contact-item">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="12" cy="12" r="4" stroke="#e74c3c" stroke-width="2"/>
+								<path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" stroke="#e74c3c" stroke-width="2"/>
+							</svg>
+							<span>behance.net/so.dibujitos</span>
+						</div>
+					</div>
+				</section>
+
+				<!-- Skills & Expertise -->
+				<section class="skills-section">
+					<h2>Habilidades & Expertise</h2>
+					<div class="skills-grid">
+						<div class="skill-card">
+							<div class="skill-icon">🎨</div>
+							<h3>Diseño de Personajes</h3>
+						</div>
+						<div class="skill-card">
+							<div class="skill-icon">✏️</div>
+							<h3>Ilustración Digital</h3>
+						</div>
+						<div class="skill-card">
+							<div class="skill-icon">💡</div>
+							<h3>Arte Conceptual</h3>
+						</div>
+						<div class="skill-card">
+							<div class="skill-icon">🖼️</div>
+							<h3>Diseño Editorial</h3>
+						</div>
+						<div class="skill-card">
+							<div class="skill-icon">🎭</div>
+							<h3>Branding</h3>
+						</div>
+						<div class="skill-card">
+							<div class="skill-icon">📱</div>
+							<h3>Social Media</h3>
+						</div>
+					</div>
+				</section>
+
+				<!-- Two Column Layout: Experience & Education -->
+				<div class="two-column-section">
+					<!-- Experience -->
+					<section class="experience-section">
+						<h2>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<rect x="2" y="7" width="20" height="14" rx="2" ry="2" stroke="#e74c3c" stroke-width="2"/>
+								<path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" stroke="#e74c3c" stroke-width="2"/>
+							</svg>
+							Experiencia
+						</h2>
+						<div class="timeline">
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2023 - Presente</div>
+									<h3>Ilustradora Freelance</h3>
+									<p>Proyectos de ilustración digital, diseño de personajes y branding para diversos clientes.</p>
+								</div>
+							</div>
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2021 - 2023</div>
+									<h3>Diseñadora Gráfica</h3>
+									<p>Estudio Creativo XYZ - Diseño editorial, branding e ilustraciones para campañas publicitarias.</p>
+								</div>
+							</div>
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2020 - 2021</div>
+									<h3>Ilustradora Junior</h3>
+									<p>Editorial ABC - Ilustraciones para libros infantiles y material educativo.</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<!-- Education -->
+					<section class="education-section">
+						<h2>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M6 12v5c3 3 9 3 12 0v-5" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							Educación
+						</h2>
+						<div class="timeline">
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2018 - 2022</div>
+									<h3>Licenciatura en Diseño Gráfico</h3>
+									<p>Universidad de Arte y Diseño</p>
+								</div>
+							</div>
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2023</div>
+									<h3>Certificación en Ilustración Digital</h3>
+									<p>Academia de Artes Digitales</p>
+								</div>
+							</div>
+							<div class="timeline-item">
+								<div class="timeline-dot"></div>
+								<div class="timeline-content">
+									<div class="period">2022</div>
+									<h3>Curso de Character Design</h3>
+									<p>Escuela de Animación</p>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+
+				<!-- Software & Tools -->
+				<section class="tools-section">
+					<h2>Software & Herramientas</h2>
+					<div class="tools-grid">
+						<div class="tool-item">
+							<div class="tool-icon">
+								<img src="/images/Adobe_Photoshop_CC_icon.svg.png" alt="Photoshop" />
+							</div>
+							<span>Photoshop</span>
+						</div>
+						<div class="tool-item">
+							<div class="tool-icon">
+								<img src="/images/Adobe_Illustrator_CC_icon.svg.png" alt="Illustrator" />
+							</div>
+							<span>Illustrator</span>
+						</div>
+						<div class="tool-item">
+							<div class="tool-icon">
+								<img src="/images/procreate.jpg" alt="Procreate" />
+							</div>
+							<span>Procreate</span>
+						</div>
+					</div>
+				</section>
+
+				<!-- Languages -->
+				<section class="languages-section">
+					<h2>Idiomas</h2>
+					<div class="languages-grid">
+						<div class="language-item">
+							<h3>Español</h3>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 100%"></div>
+							</div>
+							<span>Nativo</span>
+						</div>
+						<div class="language-item">
+							<h3>Inglés</h3>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 85%"></div>
+							</div>
+							<span>Avanzado</span>
+						</div>
+						<div class="language-item">
+							<h3>Portugués</h3>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 60%"></div>
+							</div>
+							<span>Intermedio</span>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<script is:inline>
+	// Download CV as PDF functionality
+	let html2pdfLoaded = false;
+
+	function loadHtml2Pdf() {
+		return new Promise((resolve, reject) => {
+			// Check if already loaded
+			if (window.html2pdf) {
+				html2pdfLoaded = true;
+				resolve(true);
+				return;
+			}
+
+			// Load the script
+			const script = document.createElement('script');
+			script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+			script.async = true;
+			
+			script.onload = () => {
+				html2pdfLoaded = true;
+				console.log('html2pdf loaded successfully');
+				resolve(true);
+			};
+			
+			script.onerror = () => {
+				console.error('Failed to load html2pdf');
+				reject(new Error('Failed to load PDF library'));
+			};
+			
+			document.head.appendChild(script);
+		});
+	}
+
+	async function generatePDF() {
+		const downloadBtn = document.getElementById('downloadPdf');
+		const cvContent = document.getElementById('cvContent');
+		
+		if (!downloadBtn || !cvContent) {
+			console.error('Button or content not found');
+			return;
+		}
+
+		// Show loading state
+		const originalHTML = downloadBtn.innerHTML;
+		downloadBtn.innerHTML = '<span>Generando PDF...</span>';
+		downloadBtn.disabled = true;
+
+		try {
+			// Load library if not loaded
+			if (!html2pdfLoaded) {
+				console.log('Loading html2pdf library...');
+				await loadHtml2Pdf();
+				// Wait a bit more for the library to initialize
+				await new Promise(resolve => setTimeout(resolve, 300));
+			}
+
+			// Check if html2pdf is available
+			if (typeof window.html2pdf === 'undefined') {
+				throw new Error('PDF library not available');
+			}
+
+			console.log('Starting PDF generation...');
+
+			const options = {
+				margin: [10, 10, 10, 10],
+				filename: 'Sofia_Ilustradora_CV.pdf',
+				image: { type: 'jpeg', quality: 0.98 },
+				html2canvas: { 
+					scale: 2,
+					useCORS: true,
+					letterRendering: true,
+					logging: false
+				},
+				jsPDF: { 
+					unit: 'mm', 
+					format: 'a4', 
+					orientation: 'portrait' 
+				}
+			};
+
+			await window.html2pdf().set(options).from(cvContent).save();
+			console.log('PDF generated successfully');
+
+		} catch (error) {
+			console.error('Error generating PDF:', error);
+			alert('Hubo un error al generar el PDF. Por favor, intenta de nuevo o actualiza la página.');
+		} finally {
+			// Restore button
+			downloadBtn.innerHTML = originalHTML;
+			downloadBtn.disabled = false;
+		}
+	}
+
+	// Setup event listener when DOM is ready
+	document.addEventListener('DOMContentLoaded', () => {
+		const downloadBtn = document.getElementById('downloadPdf');
+		
+		if (downloadBtn) {
+			console.log('Download button found, attaching event listener');
+			downloadBtn.addEventListener('click', generatePDF);
+		} else {
+			console.error('Download button not found');
+		}
+	});
+
+	// Also setup on astro:page-load for View Transitions
+	document.addEventListener('astro:page-load', () => {
+		const downloadBtn = document.getElementById('downloadPdf');
+		
+		if (downloadBtn) {
+			console.log('Download button found after page load, attaching event listener');
+			// Remove old listener if exists
+			downloadBtn.removeEventListener('click', generatePDF);
+			// Add new listener
+			downloadBtn.addEventListener('click', generatePDF);
+		}
+	});
+</script>
+
+<style>
+	.about-page {
+		min-height: 100vh;
+		padding: 40px 0 80px;
+		background: #f8f9fa;
+	}
+
+	.container {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	/* Download Button */
+	.download-section {
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	.download-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		background: #e74c3c;
+		color: white;
+		border: none;
+		padding: 15px 30px;
+		border-radius: 50px;
+		font-size: 1rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+	}
+
+	.download-btn:hover {
+		background: #c0392b;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+	}
+
+	.download-btn:disabled {
+		background: #95a5a6;
+		cursor: not-allowed;
+		transform: none;
+	}
+
+	/* CV Container */
+	.cv-container {
+		background: white;
+		border-radius: 20px;
+		padding: 50px;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Header Section */
+	.cv-header {
+		margin-bottom: 50px;
+		padding-bottom: 40px;
+		border-bottom: 3px solid #fcefb4;
+	}
+
+	.profile-section {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		gap: 40px;
+		align-items: center;
+		margin-bottom: 30px;
+	}
+
+	.profile-image {
+		text-align: center;
+	}
+
+	.avatar-placeholder {
+		width: 180px;
+		height: 180px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #fdf8e1, #fcefb4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 5px solid #e74c3c;
+		box-shadow: 0 5px 20px rgba(231, 76, 60, 0.2);
+	}
+
+	.profile-info .name {
+		font-size: 2.5rem;
+		color: #2c3e50;
+		margin-bottom: 10px;
+		font-weight: bold;
+	}
+
+	.profile-info .title {
+		font-size: 1.3rem;
+		color: #e74c3c;
+		margin-bottom: 15px;
+		font-weight: 600;
+	}
+
+	.profile-info .bio {
+		color: #7f8c8d;
+		line-height: 1.6;
+		font-size: 1rem;
+	}
+
+	.contact-info-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 20px;
+	}
+
+	.contact-item {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 15px;
+		background: #fdf8e1;
+		border-radius: 10px;
+	}
+
+	.contact-item span {
+		color: #2c3e50;
+		font-size: 0.95rem;
+	}
+
+	/* Skills Section */
+	.skills-section {
+		margin-bottom: 50px;
+	}
+
+	.skills-section h2 {
+		font-size: 2rem;
+		color: #2c3e50;
+		margin-bottom: 30px;
+		font-weight: bold;
+	}
+
+	.skills-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 20px;
+	}
+
+	.skill-card {
+		background: #fdf8e1;
+		padding: 25px 15px;
+		border-radius: 15px;
+		text-align: center;
+		transition: all 0.3s ease;
+		border: 2px solid transparent;
+	}
+
+	.skill-card:hover {
+		transform: translateY(-5px);
+		border-color: #e74c3c;
+		box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+	}
+
+	.skill-icon {
+		font-size: 2.5rem;
+		margin-bottom: 10px;
+	}
+
+	.skill-card h3 {
+		color: #2c3e50;
+		font-size: 1rem;
+		font-weight: 600;
+	}
+
+	/* Two Column Layout */
+	.two-column-section {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 40px;
+		margin-bottom: 50px;
+	}
+
+	.experience-section h2,
+	.education-section h2 {
+		font-size: 1.5rem;
+		color: #2c3e50;
+		margin-bottom: 25px;
+		font-weight: bold;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	/* Timeline */
+	.timeline {
+		position: relative;
+		padding-left: 30px;
+	}
+
+	.timeline::before {
+		content: '';
+		position: absolute;
+		left: 8px;
+		top: 0;
+		bottom: 0;
+		width: 3px;
+		background: #fcefb4;
+	}
+
+	.timeline-item {
+		position: relative;
+		margin-bottom: 30px;
+	}
+
+	.timeline-dot {
+		position: absolute;
+		left: -26px;
+		top: 5px;
+		width: 15px;
+		height: 15px;
+		border-radius: 50%;
+		background: #e74c3c;
+		border: 3px solid white;
+		box-shadow: 0 0 0 3px #fcefb4;
+	}
+
+	.timeline-content {
+		background: #fdf8e1;
+		padding: 20px;
+		border-radius: 10px;
+	}
+
+	.period {
+		color: #e74c3c;
+		font-weight: 600;
+		font-size: 0.9rem;
+		margin-bottom: 5px;
+	}
+
+	.timeline-content h3 {
+		color: #2c3e50;
+		font-size: 1.1rem;
+		margin-bottom: 8px;
+		font-weight: 600;
+	}
+
+	.timeline-content p {
+		color: #7f8c8d;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		margin: 0;
+	}
+
+	/* Tools Section */
+	.tools-section {
+		margin-bottom: 50px;
+	}
+
+	.tools-section h2 {
+		font-size: 2rem;
+		color: #2c3e50;
+		margin-bottom: 30px;
+		font-weight: bold;
+	}
+
+	.tools-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 30px;
+		justify-items: center;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.tool-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+
+	.tool-icon {
+		width: 100px;
+		height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 20px;
+		overflow: hidden;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		padding: 10px;
+		background: white;
+	}
+
+	.tool-icon:hover {
+		transform: scale(1.1) translateY(-5px);
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+	}
+
+	.tool-icon img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+	}
+
+	.tool-item span {
+		color: #2c3e50;
+		font-size: 1rem;
+		font-weight: 600;
+		text-align: center;
+	}
+
+	/* Languages Section */
+	.languages-section h2 {
+		font-size: 2rem;
+		color: #2c3e50;
+		margin-bottom: 30px;
+		font-weight: bold;
+	}
+
+	.languages-grid {
+		display: grid;
+		gap: 25px;
+	}
+
+	.language-item h3 {
+		color: #2c3e50;
+		font-size: 1.1rem;
+		margin-bottom: 10px;
+		font-weight: 600;
+	}
+
+	.progress-bar {
+		width: 100%;
+		height: 12px;
+		background: #ecf0f1;
+		border-radius: 10px;
+		overflow: hidden;
+		margin-bottom: 8px;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: linear-gradient(90deg, #e74c3c, #f39c12);
+		border-radius: 10px;
+		transition: width 1s ease;
+	}
+
+	.language-item span {
+		color: #7f8c8d;
+		font-size: 0.9rem;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.cv-container {
+			padding: 30px 20px;
+		}
+
+		.profile-section {
+			grid-template-columns: 1fr;
+			text-align: center;
+			gap: 20px;
+		}
+
+		.avatar-placeholder {
+			width: 150px;
+			height: 150px;
+			margin: 0 auto;
+		}
+
+		.profile-info .name {
+			font-size: 2rem;
+		}
+
+		.contact-info-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.two-column-section {
+			grid-template-columns: 1fr;
+			gap: 30px;
+		}
+
+		.skills-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.tools-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 20px;
+		}
+
+		.tool-icon {
+			width: 80px;
+			height: 80px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.cv-container {
+			padding: 20px 15px;
+		}
+
+		.profile-info .name {
+			font-size: 1.8rem;
+		}
+
+		.skills-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.tools-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 15px;
+		}
+
+		.tool-icon {
+			width: 70px;
+			height: 70px;
+		}
+
+		.tool-item span {
+			font-size: 0.85rem;
+		}
+	}
+
+	/* Print Styles */
+	@media print {
+		.download-section {
+			display: none;
+		}
+
+		.cv-container {
+			box-shadow: none;
+			padding: 20px;
+		}
+
+		.about-page {
+			background: white;
+		}
+	}
+</style>

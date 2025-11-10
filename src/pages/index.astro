@@ -1,0 +1,742 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+// Get all projects from content collection
+const allProjects = await getCollection('projects');
+
+// Sort projects by date (newest first) and featured status
+const projects = allProjects.sort((a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => {
+	if (a.data.featured && !b.data.featured) return -1;
+	if (!a.data.featured && b.data.featured) return 1;
+	return b.data.date.getTime() - a.data.date.getTime();
+});
+
+// Get unique categories for filters
+const categories = [...new Set(projects.flatMap((project: CollectionEntry<'projects'>) => project.data.categories))];
+---
+
+<Layout>
+	<main class="portfolio-page">
+		<!-- Hero Section -->
+		<section class="hero-section">
+			<div class="container">
+				<div class="hero-content">
+					<h1 class="hero-title">So's Portfolio</h1>
+					<p class="hero-description">
+						Explora mi mundo creativo a través de ilustraciones digitales, diseño de personajes y proyectos de branding. 
+						Cada pieza cuenta una historia única.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Filter Section -->
+		<section class="filter-section">
+			<div class="container">
+				<div class="filter-buttons">
+					<button class="filter-btn active" data-filter="all">Todos</button>
+					{categories.map(category => (
+						<button class="filter-btn" data-filter={category}>
+							{category === 'ilustracion' && 'Ilustración Digital'}
+							{category === 'personajes' && 'Personajes'}
+							{category === 'branding' && 'Branding'}
+							{category === 'tradicional' && 'Tradicional'}
+							{category === 'naturaleza' && 'Naturaleza'}
+							{category === 'editorial' && 'Editorial'}
+							{category === 'retrato' && 'Retrato'}
+							{category === 'experimental' && 'Experimental'}
+						</button>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- Projects Gallery -->
+		<section class="projects-gallery">
+			<div class="container">
+				<div class="masonry-grid">
+					{projects.map((project: CollectionEntry<'projects'>, index: number) => (
+						<article class="project-item" 
+							data-categories={project.data.categories.join(',')}
+							data-layout={index % 3 === 0 ? 'square' : index % 3 === 1 ? 'tall' : 'wide'}
+							data-project-id={project.slug}>
+							<a href={`/projects/${project.slug}`} class="project-link">
+								<Image 
+                                    transition:name={`img-${project.slug}`}
+									src={project.data.image} 
+									alt={project.data.title}
+									loading="lazy"
+									width={600}
+									height={400}
+									quality={85}
+									format="webp"
+									class="project-image"
+								/>
+								<div class="project-overlay">
+									<div class="project-info">
+										<h3>{project.data.title}</h3>
+										<p>{project.data.categories.join(' • ')}</p>
+										<span class="view-project">Ver proyecto</span>
+									</div>
+								</div>
+							</a>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<script>
+	// Gallery initialization
+	function initializeGallery() {
+		const filterButtons = document.querySelectorAll('.filter-btn');
+		const projectItems = document.querySelectorAll('.project-item');
+
+		if (filterButtons.length === 0 || projectItems.length === 0) return;
+
+		// Clean all filter states
+		const cleanFilterStates = () => {
+			filterButtons.forEach(btn => {
+				btn.classList.remove('active');
+				btn.removeAttribute('aria-pressed');
+			});
+		};
+
+		cleanFilterStates();
+
+		// Restore state from navigation
+		const restoreState = () => {
+			const savedFilter = sessionStorage.getItem('activeFilter');
+			const savedScrollPos = sessionStorage.getItem('scrollPosition');
+			
+			// Clear markers
+			sessionStorage.removeItem('lastProject');
+			
+			// Restore scroll position instantly
+			if (savedScrollPos) {
+				window.scrollTo({ top: parseInt(savedScrollPos), behavior: 'auto' });
+			}
+			
+			// Restore filter button state
+			const targetFilter = savedFilter || 'all';
+			const allButtons = document.querySelectorAll('.filter-btn');
+			
+			allButtons.forEach(btn => btn.classList.remove('active'));
+			
+			requestAnimationFrame(() => {
+				const filterBtn = document.querySelector(`[data-filter="${targetFilter}"]`);
+				if (filterBtn) filterBtn.classList.add('active');
+			});
+			
+			// Apply filter state immediately (no animations during View Transition)
+			applyFilterImmediate(targetFilter);
+			
+			// Cleanup
+			setTimeout(() => {
+				sessionStorage.removeItem('scrollPosition');
+				sessionStorage.removeItem('activeFilter');
+			}, 500);
+		};
+
+		// Apply filter instantly (no animation)
+		const applyFilterImmediate = (filterValue: string) => {
+			projectItems.forEach(item => {
+				const htmlItem = item as HTMLElement;
+				const categories = htmlItem.getAttribute('data-categories')?.split(',') || [];
+				const matches = filterValue === 'all' || categories.includes(filterValue);
+				
+				htmlItem.classList.remove('visible', 'hidden', 'fade-in', 'fade-out');
+				
+				if (matches) {
+					htmlItem.style.display = 'inline-block';
+					htmlItem.style.opacity = '1';
+					htmlItem.style.transform = 'translateY(0)';
+					htmlItem.classList.add('visible');
+				} else {
+					htmlItem.style.display = 'none';
+					htmlItem.classList.add('hidden');
+				}
+			});
+		};
+
+		// Setup filter buttons (optimized)
+		const setupFilters = () => {
+			const buttons = document.querySelectorAll('.filter-btn');
+			
+			buttons.forEach(button => {
+				button.addEventListener('click', (e) => {
+					e.preventDefault();
+					const target = e.currentTarget as HTMLElement;
+					const filterValue = target.getAttribute('data-filter');
+					
+					if (!filterValue) return;
+					
+					// Update active state
+					buttons.forEach(btn => btn.classList.remove('active'));
+					target.classList.add('active');
+					
+					// Save state
+					sessionStorage.setItem('activeFilter', filterValue);
+					sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+					
+					// Animate filter change
+					animateFilterChange(filterValue);
+				});
+			});
+		};
+		
+		// Optimized filter animation
+		const animateFilterChange = (filterValue: string) => {
+			// Hide non-matching items
+			projectItems.forEach(item => {
+				const htmlItem = item as HTMLElement;
+				const categories = htmlItem.getAttribute('data-categories')?.split(',') || [];
+				const matches = filterValue === 'all' || categories.includes(filterValue);
+				
+				htmlItem.classList.remove('visible', 'fade-in', 'fade-out');
+				
+				if (matches) {
+					htmlItem.style.display = 'inline-block';
+					htmlItem.style.opacity = '0';
+					htmlItem.style.transform = 'translateY(10px)';
+					htmlItem.classList.remove('hidden');
+				} else {
+					htmlItem.style.display = 'none';
+					htmlItem.classList.add('hidden');
+				}
+			});
+			
+			// Animate with stagger
+			requestAnimationFrame(() => {
+				let index = 0;
+				projectItems.forEach(item => {
+					const htmlItem = item as HTMLElement;
+					const categories = htmlItem.getAttribute('data-categories')?.split(',') || [];
+					
+					if (filterValue === 'all' || categories.includes(filterValue)) {
+						setTimeout(() => {
+							requestAnimationFrame(() => {
+								htmlItem.style.opacity = '';
+								htmlItem.style.transform = '';
+								htmlItem.classList.add('fade-in');
+								
+								setTimeout(() => {
+									htmlItem.classList.remove('fade-in');
+									htmlItem.classList.add('visible');
+								}, 320);
+							});
+						}, index * 16);
+						index++;
+					}
+				});
+			});
+		};
+		
+		setupFilters();
+
+		// Save state before navigating to project
+		const saveNavigationState = () => {
+			const projectLinks = document.querySelectorAll('.project-link');
+			projectLinks.forEach(link => {
+				link.addEventListener('click', () => {
+					const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+					sessionStorage.setItem('activeFilter', activeFilter);
+					sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+					sessionStorage.setItem('navigatingToProject', 'true');
+				});
+			});
+		};
+		
+		saveNavigationState();
+
+		// Decide initialization strategy
+		const shouldRestore = sessionStorage.getItem('lastProject');
+		const hasNavigatingFlag = sessionStorage.getItem('navigatingToProject');
+		const hasSavedState = sessionStorage.getItem('activeFilter') || sessionStorage.getItem('scrollPosition');
+		
+		// Clear navigation flag
+		sessionStorage.removeItem('navigatingToProject');
+		
+		// View Transition navigation - restore state without animations
+		if (isViewTransition && (shouldRestore || hasNavigatingFlag || hasSavedState)) {
+			restoreState();
+		}
+		// Coming back from project detail - restore state
+		else if (shouldRestore || (hasNavigatingFlag && hasSavedState)) {
+			restoreState();
+		}
+		// First load or F5 reload - show with animation
+		else {
+			initializeWithAnimation();
+		}
+	}
+
+	// Initialize with entrance animation (optimized for low-end devices)
+	const initializeWithAnimation = () => {
+		const projectItems = document.querySelectorAll('.project-item');
+		const buttons = document.querySelectorAll('.filter-btn');
+		
+		// Set active filter
+		buttons.forEach(btn => btn.classList.remove('active'));
+		requestAnimationFrame(() => {
+			document.querySelector('[data-filter="all"]')?.classList.add('active');
+		});
+		
+		// View Transition - instant display
+		if (isViewTransition) {
+			projectItems.forEach(item => {
+				const el = item as HTMLElement;
+				el.style.display = 'inline-block';
+				el.style.opacity = '1';
+				el.style.transform = 'translateY(0)';
+				el.classList.remove('hidden', 'fade-in');
+				el.classList.add('visible');
+			});
+			return;
+		}
+		
+		// Staggered fade-in animation
+		projectItems.forEach((item, i) => {
+			const el = item as HTMLElement;
+			el.style.display = 'inline-block';
+			el.classList.remove('hidden');
+			
+			setTimeout(() => {
+				requestAnimationFrame(() => {
+					el.classList.add('fade-in');
+					setTimeout(() => {
+						el.classList.remove('fade-in');
+						el.classList.add('visible');
+					}, 320);
+				});
+			}, i * 18);
+		});
+	};
+
+	// Track View Transition state
+	let isViewTransition = false;
+	
+	// Detect View Transitions
+	document.addEventListener('astro:before-preparation', () => {
+		isViewTransition = true;
+		sessionStorage.setItem('isViewTransitionActive', 'true');
+	});
+	
+	// DOM ready - first load
+	document.addEventListener('DOMContentLoaded', () => {
+		isViewTransition = false;
+		sessionStorage.removeItem('isViewTransitionActive');
+		initializeGallery();
+	});
+	
+	// Page load via View Transitions
+	document.addEventListener('astro:page-load', () => {
+		isViewTransition = sessionStorage.getItem('isViewTransitionActive') === 'true';
+		initializeGallery();
+	});
+	
+	// After View Transition swap
+	document.addEventListener('astro:after-swap', () => {
+		isViewTransition = sessionStorage.getItem('isViewTransitionActive') === 'true';
+		initializeGallery();
+		setTimeout(() => {
+			isViewTransition = false;
+			sessionStorage.removeItem('isViewTransitionActive');
+		}, 300);
+	});
+	
+	// Fallback for immediate execution
+	if (document.readyState !== 'loading') {
+		initializeGallery();
+	}
+</script>
+
+<style>
+	.portfolio-page {
+		min-height: 100vh;
+		/* Prevent scroll jumps during restoration */
+		scroll-behavior: auto !important;
+	}
+
+	.container {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	/* Hero Section */
+	.hero-section {
+		padding: 20px 0 80px;
+		background: linear-gradient(135deg, #fdf8e1 0%, #f8f5e8 100%);
+		text-align: center;
+	}
+
+	.hero-content {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.hero-title {
+		font-size: 3.5rem;
+		color: #2c3e50;
+		margin-bottom: 15px;
+		font-weight: bold;
+		line-height: 1.2;
+	}
+
+	.hero-subtitle {
+		font-size: 1.8rem;
+		color: #e74c3c;
+		margin-bottom: 25px;
+		font-weight: 300;
+	}
+
+	.hero-description {
+		font-size: 1.2rem;
+		color: #7f8c8d;
+		line-height: 1.6;
+		margin-bottom: 40px;
+		max-width: 600px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	/* Filter Section */
+	.filter-section {
+		padding: 40px 0;
+		background: white;
+		text-align: center;
+		border-bottom: 1px solid #ecf0f1;
+	}
+
+	.filter-buttons {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 15px;
+	}
+
+	.filter-btn {
+		background: #ffffff;
+		border: 2px solid #ecf0f1;
+		color: #7f8c8d;
+		padding: 12px 24px;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		font-weight: 500;
+	}
+
+	.filter-btn:hover,
+	.filter-btn.active {
+		background: #e74c3c;
+		border-color: #e74c3c;
+		color: white;
+		transform: translateY(-2px);
+		box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+	}
+
+	/* Projects Gallery */
+	.projects-gallery {
+		padding: 60px 0;
+		background: #f8f9fa;
+	}
+
+	.masonry-grid {
+		columns: 4;
+		column-gap: 0px;
+		margin-bottom: 80px;
+		line-height: 0;
+		min-height: 200px;
+	}
+
+	.project-item {
+		display: inline-block;
+		width: 100%;
+		margin-bottom: 0px;
+		overflow: visible;
+		position: relative;
+		break-inside: avoid;
+		border: none;
+		box-shadow: none;
+		background: transparent;
+		opacity: 0; /* Hidden by default - prevents F5 flicker */
+		transform: translateY(10px);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		will-change: opacity, transform;
+	}
+
+	.project-link {
+		display: block;
+		position: relative;
+		text-decoration: none;
+		color: inherit;
+		overflow: visible;
+		border-radius: 0px;
+	}
+
+	.project-item:hover .project-link {
+		transform: scale(1.0);
+	}
+
+	.project-item img,
+	.project-item .project-image {
+		width: 100%;
+		height: auto;
+		display: block;
+		border: none;
+		border-radius: 0px;
+		margin: 0;
+		padding: 0;
+		vertical-align: top;
+		object-fit: cover;
+		min-height: 200px;
+		max-height: 800px;
+		will-change: transform;
+	}
+
+	/* Different sizes for masonry layout based on data-layout attribute */
+	.project-item[data-layout="square"] img,
+	.project-item[data-layout="square"] .project-image {
+		aspect-ratio: 1;
+		object-fit: cover;
+		min-height: 250px;
+		max-height: 400px;
+	}
+
+	.project-item[data-layout="tall"] img,
+	.project-item[data-layout="tall"] .project-image {
+		aspect-ratio: 3/4;
+		object-fit: cover;
+		min-height: 300px;
+		max-height: 500px;
+	}
+
+	.project-item[data-layout="wide"] img,
+	.project-item[data-layout="wide"] .project-image {
+		aspect-ratio: 4/3;
+		object-fit: cover;
+		min-height: 200px;
+		max-height: 350px;
+	}
+
+	/* Project overlay that appears on hover */
+	.project-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(44, 62, 80, 0.425);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 15px;
+		border-radius: 0px;
+		flex-direction: column;
+		will-change: opacity;
+	}
+
+	.project-item:hover .project-overlay {
+		opacity: 1;
+	}
+
+	.project-info {
+		color: white;
+		width: 100%;
+		max-width: 100%;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+
+	.project-info h3 {
+		font-size: 1.2rem;
+		margin-bottom: 8px;
+		font-weight: bold;
+		color: white;
+		line-height: 1.3;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		hyphens: auto;
+		max-width: 100%;
+	}
+
+	.project-info p {
+		font-size: 1rem;
+		margin-bottom: 15px;
+		color: #ecf0f1;
+		text-transform: capitalize;
+	}
+
+	.view-project {
+		display: inline-block;
+		background: #f9dc5c;
+		color: white;
+		padding: 8px 16px;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		transition: transform 0.25s ease, background 0.25s ease;
+	}
+
+	.project-item:hover .view-project {
+		background: #fae483;
+		transform: translateY(-2px);
+	}
+
+	/* Hide old overlay styles */
+	.project-info-overlay {
+		display: none;
+	}
+
+	/* Filter Animation States */
+	.project-item.visible {
+		display: inline-block;
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.project-item.hidden {
+		display: none;
+	}
+
+	.project-item.fade-in {
+		display: inline-block;
+		animation: smoothFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+
+	.project-item.fade-out {
+		animation: smoothFadeOut 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+
+	@keyframes smoothFadeIn {
+		0% {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes smoothFadeOut {
+		0% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(-8px);
+		}
+	}
+
+	/* Hover effect - optimized for low-end devices */
+	.project-item.visible:hover,
+	.project-item:not(.fade-out):not(.fade-in):hover {
+		transform: translateY(-5px);
+		z-index: 100;
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+	}
+
+	/* Ensure animations take precedence over hover during filter transitions */
+	.project-item.fade-in,
+	.project-item.fade-out {
+		pointer-events: none;
+	}
+
+	.project-item.fade-in {
+		pointer-events: auto;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 1200px) {
+		.masonry-grid {
+			columns: 3;
+			column-gap: 0px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.hero-title {
+			font-size: 2.8rem;
+		}
+
+		.hero-subtitle {
+			font-size: 1.4rem;
+		}
+
+		.filter-buttons {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.filter-btn {
+			width: 200px;
+		}
+
+		.masonry-grid {
+			columns: 2;
+			column-gap: 0px;
+		}
+
+		.project-item {
+			margin-bottom: 0px;
+		}
+
+		.project-overlay {
+			padding: 12px;
+		}
+
+		.project-info h3 {
+			font-size: 1.1rem;
+			line-height: 1.3;
+		}
+
+	}
+
+	@media (max-width: 480px) {
+		.hero-title {
+			font-size: 2.2rem;
+		}
+
+		.hero-subtitle {
+			font-size: 1.2rem;
+		}
+
+		.masonry-grid {
+			columns: 1;
+		}
+
+		.project-overlay {
+			padding: 12px;
+		}
+
+		.project-info h3 {
+			font-size: 1rem;
+			line-height: 1.2;
+			margin-bottom: 6px;
+		}
+
+		.project-info p {
+			font-size: 0.9rem;
+			margin-bottom: 10px;
+		}
+
+		.view-project {
+			padding: 6px 12px;
+			font-size: 0.8rem;
+		}
+
+		.project-info p {
+			font-size: 0.8rem;
+		}
+	}
+</style>
