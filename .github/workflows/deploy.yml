@@ -1,13 +1,10 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Activa el flujo de trabajo cada vez que hagas push a la rama `main`
   push:
     branches: [ main ]
-  # Te permite ejecutar este flujo de trabajo manualmente desde la pestaña Acciones en GitHub.
   workflow_dispatch:
 
-# Permite que este trabajo clone el repositorio y cree un despliegue de página
 permissions:
   contents: read
   pages: write
@@ -17,14 +14,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
+      - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          path: . # La ubicación raíz de tu proyecto de Astro dentro del repositorio
-          node-version: 20 # La versión específica de Node que debería usarse para construir tu sitio
+          node-version: 20
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build with Astro
+        run: npm run build
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     needs: build
